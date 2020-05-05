@@ -13,7 +13,8 @@ app.set("view engine", "ejs");
 ///schema setup
 var campgroundSchema = new mongoose.Schema({
 	name:String,
-	image:String
+	image:String,
+	description:String
 });
 
 var Campground = mongoose.model("Campground",campgroundSchema);
@@ -49,7 +50,8 @@ app.get("/", function(req,res){
 app.post("/",function(req,res){
 	var name = req.body.name;
 	var image = req.body.image;
-	Campground.create({name:name,image:image},function(err,campground){
+	var description = req.body.description;
+	Campground.create({name:name,image:image,description:description},function(err,campground){
 		if(err){
 			console.log(err);
 		} else {
@@ -58,6 +60,17 @@ app.post("/",function(req,res){
 	})
 	
 	res.redirect("/");
+})
+
+app.get("/campgrounds/:id",function(req,res){
+	Campground.findById(req.params.id,function(err,campground){
+		if(err){
+			console.log(err);
+		}else{
+			res.render("show",{campground:campground})
+		}
+	})
+	
 })
 
 
